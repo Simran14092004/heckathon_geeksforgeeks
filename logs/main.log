@@ -1,0 +1,100 @@
+2025-04-10 13:24:05,929 — main — ERROR — Agent error: Object of type DataFrame is not JSON serializable
+2025-04-10 13:24:06,205 — main — ERROR — Agent error: Object of type DataFrame is not JSON serializable
+2025-04-10 13:44:54,362 — main — ERROR — Agent error: Object of type DataFrame is not JSON serializable
+2025-04-10 13:44:54,462 — main — ERROR — Agent error: Object of type DataFrame is not JSON serializable
+2025-04-10 13:49:29,202 — main — ERROR — Agent error: Object of type DataFrame is not JSON serializable
+2025-04-10 14:01:52,680 — main — ERROR — Agent error: Object of type DataFrame is not JSON serializable
+2025-04-10 14:06:47,860 — main — INFO — Loading inventory dataset...
+2025-04-10 14:06:48,081 — main — INFO — Loaded Inventory DataFrame:
+   Product ID  Store ID  Stock Levels  ...  Expiry Date  Warehouse Capacity  Order Fulfillment Time (days)
+0        9286        16           700  ...   2024-01-15                1052                              6
+1        2605        60            82  ...   2024-12-16                1262                              9
+2        2859        55           145  ...   2024-04-30                1457                             12
+3        2374        24           151  ...   2024-12-16                2944                              3
+4        7678         5           714  ...   2024-08-05                3739                              7
+
+[5 rows x 9 columns]
+2025-04-10 14:06:48,217 — main — INFO — Serialized inventory data: [{'Product ID': 9286, 'Store ID': 16, 'Stock Levels': 700, 'Supplier Lead Time (days)': 10, 'Stockout Frequency': 14, 'Reorder Point': 132, 'Expiry Date': '2024-01-15', 'Warehouse Capacity': 1052, 'Order Fulfillment Time (days)': 6}, {'Product ID': 2605, 'Store ID': 60, 'Stock Levels': 82, 'Supplier Lead Time (days)': 11, 'Stockout Frequency': 1, 'Reorder Point': 127, 'Expiry Date': '2024-12-16', 'Warehouse Capacity': 1262, 'Order Fulfillment Time (days)': 9}]
+2025-04-10 14:06:49,984 — main — ERROR — Agent error: Object of type DataFrame is not JSON serializable
+2025-04-10 14:53:33,301 — main — INFO — Loading inventory dataset...
+2025-04-10 14:53:33,571 — main — INFO — Loaded Inventory DataFrame:
+   Product ID  Store ID  Stock Levels  ...  Expiry Date  Warehouse Capacity  Order Fulfillment Time (days)
+0        9286        16           700  ...   2024-01-15                1052                              6
+1        2605        60            82  ...   2024-12-16                1262                              9
+2        2859        55           145  ...   2024-04-30                1457                             12
+3        2374        24           151  ...   2024-12-16                2944                              3
+4        7678         5           714  ...   2024-08-05                3739                              7
+
+[5 rows x 9 columns]
+2025-04-10 14:53:33,806 — main — INFO — Serialized inventory data: [{'Product ID': 9286, 'Store ID': 16, 'Stock Levels': 700, 'Supplier Lead Time (days)': 10, 'Stockout Frequency': 14, 'Reorder Point': 132, 'Expiry Date': '2024-01-15', 'Warehouse Capacity': 1052, 'Order Fulfillment Time (days)': 6}, {'Product ID': 2605, 'Store ID': 60, 'Stock Levels': 82, 'Supplier Lead Time (days)': 11, 'Stockout Frequency': 1, 'Reorder Point': 127, 'Expiry Date': '2024-12-16', 'Warehouse Capacity': 1262, 'Order Fulfillment Time (days)': 9}]
+2025-04-10 14:53:34,645 — main — INFO — Loading inventory dataset...
+2025-04-10 14:53:34,709 — main — INFO — Loaded Inventory DataFrame:
+   Product ID  Store ID  Stock Levels  ...  Expiry Date  Warehouse Capacity  Order Fulfillment Time (days)
+0        9286        16           700  ...   2024-01-15                1052                              6
+1        2605        60            82  ...   2024-12-16                1262                              9
+2        2859        55           145  ...   2024-04-30                1457                             12
+3        2374        24           151  ...   2024-12-16                2944                              3
+4        7678         5           714  ...   2024-08-05                3739                              7
+
+[5 rows x 9 columns]
+2025-04-10 14:53:34,872 — main — INFO — Serialized inventory data: [{'Product ID': 9286, 'Store ID': 16, 'Stock Levels': 700, 'Supplier Lead Time (days)': 10, 'Stockout Frequency': 14, 'Reorder Point': 132, 'Expiry Date': '2024-01-15', 'Warehouse Capacity': 1052, 'Order Fulfillment Time (days)': 6}, {'Product ID': 2605, 'Store ID': 60, 'Stock Levels': 82, 'Supplier Lead Time (days)': 11, 'Stockout Frequency': 1, 'Reorder Point': 127, 'Expiry Date': '2024-12-16', 'Warehouse Capacity': 1262, 'Order Fulfillment Time (days)': 9}]
+2025-04-10 14:53:35,806 — main — ERROR — Pricing API error
+Traceback (most recent call last):
+  File "D:\python_practice\retail_heck\main.py", line 154, in pricing_api
+    return jsonify({"pricing_suggestions": result})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_practice\retail_heck\venv\Lib\site-packages\flask\json\__init__.py", line 170, in jsonify
+    return current_app.json.response(*args, **kwargs)  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_practice\retail_heck\venv\Lib\site-packages\flask\json\provider.py", line 214, in response
+    f"{self.dumps(obj, **dump_args)}\n", mimetype=self.mimetype
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_practice\retail_heck\venv\Lib\site-packages\flask\json\provider.py", line 179, in dumps
+    return json.dumps(obj, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\json\__init__.py", line 238, in dumps
+    **kw).encode(obj)
+          ^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\json\encoder.py", line 202, in encode
+    chunks = list(chunks)
+             ^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\json\encoder.py", line 432, in _iterencode
+    yield from _iterencode_dict(o, _current_indent_level)
+  File "C:\Program Files\Python312\Lib\json\encoder.py", line 406, in _iterencode_dict
+    yield from chunks
+  File "C:\Program Files\Python312\Lib\json\encoder.py", line 439, in _iterencode
+    o = _default(o)
+        ^^^^^^^^^^^
+  File "D:\python_practice\retail_heck\venv\Lib\site-packages\flask\json\provider.py", line 121, in _default
+    raise TypeError(f"Object of type {type(o).__name__} is not JSON serializable")
+TypeError: Object of type DataFrame is not JSON serializable
+2025-04-10 14:53:36,404 — main — ERROR — Pricing API error
+Traceback (most recent call last):
+  File "D:\python_practice\retail_heck\main.py", line 154, in pricing_api
+    return jsonify({"pricing_suggestions": result})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_practice\retail_heck\venv\Lib\site-packages\flask\json\__init__.py", line 170, in jsonify
+    return current_app.json.response(*args, **kwargs)  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_practice\retail_heck\venv\Lib\site-packages\flask\json\provider.py", line 214, in response
+    f"{self.dumps(obj, **dump_args)}\n", mimetype=self.mimetype
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_practice\retail_heck\venv\Lib\site-packages\flask\json\provider.py", line 179, in dumps
+    return json.dumps(obj, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\json\__init__.py", line 238, in dumps
+    **kw).encode(obj)
+          ^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\json\encoder.py", line 202, in encode
+    chunks = list(chunks)
+             ^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\json\encoder.py", line 432, in _iterencode
+    yield from _iterencode_dict(o, _current_indent_level)
+  File "C:\Program Files\Python312\Lib\json\encoder.py", line 406, in _iterencode_dict
+    yield from chunks
+  File "C:\Program Files\Python312\Lib\json\encoder.py", line 439, in _iterencode
+    o = _default(o)
+        ^^^^^^^^^^^
+  File "D:\python_practice\retail_heck\venv\Lib\site-packages\flask\json\provider.py", line 121, in _default
+    raise TypeError(f"Object of type {type(o).__name__} is not JSON serializable")
+TypeError: Object of type DataFrame is not JSON serializable
