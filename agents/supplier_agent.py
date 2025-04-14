@@ -24,4 +24,3 @@ def get_supplier_recommendation(product_id, demand, lead_time_days=5):
     except Exception as e:
         logger.exception("Error in supplier recommendation")
         return {"error": str(e)}
-

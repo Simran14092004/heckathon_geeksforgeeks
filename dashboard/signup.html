@@ -53,4 +53,60 @@
     </script>
 </body>
 </html>
+<!-- 
+# signup.html -->
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Signup</title>
+    <meta name="description" content="Signup for Smart Inventory System">
+    <meta name="keywords" content="AI, Inventory, Signup, Registration">
+    <link rel="stylesheet" href="/dashboard/style.css" />
+</head>
+<body>
+    <header>
+        <img src="dashboard/favicon.png" alt="Logo" class="logo" />
+        <h1>Signup</h1>
+    </header>
+    <main>
+        <section class="form-container">
+            <form action="/signup" method="POST" onsubmit="return validateForm()">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" required />
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required />
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required />
+                <span id="password-strength"></span>
+                <button type="submit">Signup</button>
+            </form>
+            <p>Already have an account? <a href="/login">Login here</a></p>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 Smart Inventory System</p>
+    </footer>
 
+    <script>
+        // Password strength validation
+        document.getElementById("password").addEventListener("input", function() {
+            let password = this.value;
+            let strength = "Weak";
+            if (password.length > 6) {
+                strength = "Medium";
+            }
+            if (password.length > 10) {
+                strength = "Strong";
+            }
+            document.getElementById("password-strength").innerText = `Password Strength: ${strength}`;
+        });
+
+        function validateForm() {
+            // Additional client-side validation if needed
+            return true;
+        }
+    </script>
+</body>
+</html> -->

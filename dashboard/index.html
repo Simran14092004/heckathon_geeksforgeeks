@@ -1,362 +1,111 @@
-<!-- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Multi-Agent Inventory Dashboard</title>
-    <meta name="description" content="Smart Inventory AI Dashboard for efficient supply chain management.">
-    <meta name="keywords" content="AI, Inventory, Smart, Dashboard, Supply Chain">
-    <link rel="stylesheet" href="/dashboard/style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Smart Inventory AI Dashboard</title>
+    <meta name="description" content="AI-powered inventory dashboard">
+    <meta name="keywords" content="AI, Inventory, Dashboard, Supply Chain">
+    <link rel="stylesheet" href="/dashboard/style.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 </head>
-<body>
+<body onload="showLoginSignupPopup()">
     <header>
-        <img src="dashboard/favicon.png" alt="Logo" class="logo" />
+        <img src="/dashboard/favicon.png" alt="Logo" class="logo"/>
         <h1 class="animated-title">Welcome to Smart Inventory AI Dashboard</h1>
     </header>
-    <script>
-        // Add animation to title
-        document.querySelector('.animated-title').classList.add('animate__animated', 'animate__fadeInDown');
-    </script>
 
- Navigation Bar
- <nav class="navbar navbar-expand-lg navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">Smart Inventory</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-                <li class="nav-item"><a class="nav-link" href="#demand">Demand Forecast</a></li>
-                <li class="nav-item"><a class="nav-link" href="#inventory">Inventory Levels</a></li>
-                <li class="nav-item"><a class="nav-link" href="#pricing">Pricing</a></li>
-                <li class="nav-item"><a class="nav-link" href="#coordination">Coordination</a></li>
-            </ul>
+    <nav class="navbar">
+        <div class="hamburger-menu" onclick="toggleNav()">
+            <span></span>
+            <span></span>
+            <span></span>
         </div>
-    </div>
-</nav>
-
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#" onclick="scrollToSection('mainPage')">Prediction</a></li>
+            <li><a href="#" onclick="scrollToSection('askMeSection')">Ask Me</a></li>
+            <li><a href="#" onclick="scrollToSection('filterSection')">Filter Products</a></li>
+            <li><a href="#" onclick="scrollToSection('supplierSection')">Supplier Recommendations</a></li>
+        </ul>
+    </nav>
 
     <main>
         <section class="controls">
-            <button onclick="fetchAgent('demand')">Get Demand Forecast</button>
-            <button onclick="fetchAgent('inventory')">Check Inventory</button>
-            <button onclick="fetchAgent('pricing')">Suggest Pricing</button>
-            <button onclick="fetchAgent('scrape')">Scrape Latest Price</button>
-            <button onclick="fetchAgent('coordination')">Run Coordination Agent</button>
+            <button onclick="fetchAgent('demand')" class="animate__animated animate__pulse">Get Demand Forecast</button>
+            <button onclick="fetchAgent('inventory')" class="animate__animated animate__pulse">Check Inventory</button>
+            <button onclick="fetchAgent('pricing')" class="animate__animated animate__pulse">Suggest Pricing</button>
+            <button onclick="fetchAgent('coordination')" class="animate__animated animate__pulse">Run Coordination Agent</button>
         </section>
 
-        <section class="phi-toggle">
-            <label>
-                <input type="checkbox" id="usePhi" />
-                Use Ollama Phi-2 AI
-            </label>
-        </section>
-
-        <section class="output" id="output">
+        <section id="output" class="output">
             <h2>Agent Output</h2>
             <pre id="result">Click a button to get started...</pre>
         </section>
 
-        <!-- Loading Spinner -->
-        <!-- <div id="loadingSpinner" style="display: none;">Loading...</div>
-
-        <section class="chat">
-            <input id="userQuery" placeholder="Ask a question..." />
-            <button onclick="sendChat()">Ask</button>
-            <pre id="chatOutput"></pre>
+        <div id="loadingSpinner" style="display: none;">Loading...</div>
+          
+        <section id="chartsSection" class="charts-section">
+            <h3>Demand Chart</h3>
+            <canvas id="demandChart"></canvas>
+        
+            <h3>Inventory Chart</h3>
+            <canvas id="inventoryChart"></canvas>
+        
+            <h3>Pricing Chart</h3>
+            <canvas id="pricingChart"></canvas>
         </section>
 
+
+        <section id="askMeSection" class="chat">
+            <h3>Ask a Question</h3>
+            <input id="userQuery" placeholder="Ask something about inventory, pricing, or demand..."/>
+            <button onclick="handleAskMe()" class="animate__animated animate__bounce">Ask</button>
+            <pre id="chatOutput"></pre>
+            <div id="askMeOutput" class="output-box"></div>
+        </section>
         
-    </main>
+
+        <section id="supplierSection" class="supplier-recommendations">
+            <h3>Supplier Recommendations</h3>
+            <a href="supplier.html" class="button">View Supplier Recommendations</a>
+        </section>
+   
+    
+    <section id="filterSection" class="product-filter">
+        <h3>Filter Products</h3>
+        <input type="number" id="filterCount" placeholder="Enter number of products (e.g., 10, 20)" />
+        <button onclick="filterProducts()" class="animate__animated animate__fadeIn">Filter Top Products</button>
+    </section>
+    <section id="resultSection">
+        <h3>Filtered Products</h3>
+        <pre id="result"></pre>
+    </section>
+</main>
 
     <footer>
         <p>&copy; 2025 Smart Inventory System</p>
         <p>
-            <a href="/signup">Signup</a> | 
-            <a href="/login">Login</a> | 
+            <a href="/signup">Signup</a> |
+            <a href="/login">Login</a> |
             <a href="/contact">Contact</a>
         </p>
     </footer>
-    
-    <script>
-        async function fetchAgent(type) {
-            const usePhi = document.getElementById("usePhi").checked;
-            const resultElement = document.getElementById("result");
-            document.getElementById('loadingSpinner').style.display = 'block';
-            resultElement.textContent = "Loading...";
 
-            try {
-                const res = await fetch(`/api/${type}?phi=${usePhi}`);
-                const data = await res.json();
-                if (res.ok) {
-                    resultElement.textContent = JSON.stringify(data, null, 2);
-                } else {
-                    resultElement.textContent = `❌ Error: ${data.error || "Unknown error"}`;
-                }
-            } catch (err) {
-                resultElement.textContent = `❌ Error: ${err.message}`;
-            } finally {
-                document.getElementById('loadingSpinner').style.display = 'none';
-            }
-
-            resultElement.scrollIntoView({ behavior: "smooth" });
-        }
-
-        async function sendChat() {
-            const query = document.getElementById("userQuery").value;
-            const response = await fetch("/api/chat", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ query })
-            });
-            const data = await response.json();
-            document.getElementById("chatOutput").innerText = data.response || data.error;
-        }
-    </script>
-</body>
-</html> -->
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Inventory Dashboard</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/dashboard/style.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body>
-    <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Smart Inventory</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item"><a class="nav-link" href="#demand">Demand Forecast</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#inventory">Inventory Levels</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#pricing">Pricing Insights</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#coordination">Coordination Actions</a></li>
-                </ul>
-            </div>
+    <div id="loginSignupPopup" class="popup">
+        <div class="popup-content">
+            <h2>Welcome!</h2>
+            <p>Please log in or sign up to continue.</p>
+            <button onclick="redirectToLogin()">Login</button>
+            <button onclick="redirectToSignup()">Signup</button>
+            <button onclick="stayLoggedOut()">Stay Logged Out</button>
         </div>
-    </nav>
-
-    <!-- Header Section -->
-    <header>
-        <img src="/dashboard/logo.png" alt="Logo" class="logo">
-        <h1 class="animated-title">Smart Inventory AI Dashboard</h1>
-    </header>
-
-    <!-- Main Content -->
-    <main class="container mt-4">
-        <div class="row">
-            <!-- Demand Forecast -->
-            <div class="col-md-6 mb-4">
-                <div class="card p-3">
-                    <h3 class="card-title">Demand Forecast</h3>
-                    <canvas id="demandChart"></canvas>
-                </div>
-            </div>
-
-            <!-- Inventory Levels -->
-            <div class="col-md-6 mb-4">
-                <div class="card p-3">
-                    <h3 class="card-title">Inventory Levels</h3>
-                    <canvas id="inventoryChart"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <!-- Pricing Insights -->
-            <div class="col-md-6 mb-4">
-                <div class="card p-3">
-                    <h3 class="card-title">Pricing Insights</h3>
-                    <canvas id="pricingChart"></canvas>
-                </div>
-            </div>
-
-            <!-- Coordination Actions -->
-            <div class="col-md-6 mb-4">
-                <div class="card p-3">
-                    <h3 class="card-title">Coordination Actions</h3>
-                    <canvas id="coordinationChart"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <!-- Toggle for Phi AI -->
-        <div class="row mt-4">
-            <div class="col-md-12 text-center">
-                <div class="phi-toggle">
-                    <label>
-                        <input type="checkbox" id="usePhi"> Use Phi AI (Ollama)
-                    </label>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <!-- Footer -->
-    <footer>
-        <p>&copy; <span id="year"></span> Smart Inventory System. All rights reserved. | <a href="#contact">Contact Us</a></p>
-    </footer>
-
-    <script>
-        // Set current year in footer
-        document.getElementById("year").textContent = new Date().getFullYear();
-
-        // Fetch data from backend and render charts
-        async function fetchDataAndRenderCharts() {
-            const usePhi = document.getElementById("usePhi").checked;
-            const phiParam = usePhi ? "?phi=true" : "?phi=false";
-
-            try {
-                // Demand Forecast
-                const demandResponse = await fetch(`/api/demand${phiParam}`);
-                const demandData = await demandResponse.json();
-                if (!demandData.demand_predictions) throw new Error("Invalid demand data format.");
-                const demandLabels = demandData.demand_predictions.map(d => d.product);
-                const demandValues = demandData.demand_predictions.map(d => d.forecast);
-                new Chart(document.getElementById('demandChart'), {
-                    type: 'bar',
-                    data: {
-                        labels: demandLabels,
-                        datasets: [{
-                            label: 'Forecasted Demand',
-                            data: demandValues,
-                            backgroundColor: 'rgba(54, 162, 235, 0.7)'
-                        }]
-                    }
-                });
-
-                // Inventory Levels
-                const inventoryResponse = await fetch(`/api/inventory${phiParam}`);
-                const inventoryData = await inventoryResponse.json();
-                if (!inventoryData.inventory_data) throw new Error("Invalid inventory data format.");
-                const inventoryLabels = inventoryData.inventory_data.map(i => i.product);
-                const inventoryValues = inventoryData.inventory_data.map(i => i.stock);
-                new Chart(document.getElementById('inventoryChart'), {
-                    type: 'bar',
-                    data: {
-                        labels: inventoryLabels,
-                        datasets: [{
-                            label: 'Stock Levels',
-                            data: inventoryValues,
-                            backgroundColor: 'rgba(255, 99, 132, 0.7)'
-                        }]
-                    }
-                });
-
-                // Pricing Insights
-                const pricingResponse = await fetch(`/api/pricing${phiParam}`);
-                const pricingData = await pricingResponse.json();
-                if (!pricingData.pricing_suggestions) throw new Error("Invalid pricing data format.");
-                const pricingLabels = pricingData.pricing_suggestions.map(p => p.product);
-                const pricingValues = pricingData.pricing_suggestions.map(p => p.suggested_price);
-                new Chart(document.getElementById('pricingChart'), {
-                    type: 'line',
-                    data: {
-                        labels: pricingLabels,
-                        datasets: [{
-                            label: 'Pricing Suggestions',
-                            data: pricingValues,
-                            borderColor: 'rgba(75, 192, 192, 1)',
-                            borderWidth: 2
-                        }]
-                    }
-                });
-
-                // Coordination Actions
-                const coordinationResponse = await fetch(`/api/coordination`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        demand_data: demandData.demand_predictions,
-                        inventory_data: inventoryData.inventory_data,
-                        pricing_data: pricingData.pricing_suggestions
-                    })
-                });
-                const coordinationData = await coordinationResponse.json();
-                if (!coordinationData.coordination_suggestions) throw new Error("Invalid coordination data format.");
-                const coordinationLabels = coordinationData.coordination_suggestions.map(c => c.product);
-                const coordinationValues = coordinationData.coordination_suggestions.map(c => c.action);
-                new Chart(document.getElementById('coordinationChart'), {
-                    type: 'pie',
-                    data: {
-                        labels: coordinationLabels,
-                        datasets: [{
-                            label: 'Coordination Actions',
-                            data: coordinationValues,
-                            backgroundColor: ['rgba(255, 205, 86, 0.7)', 'rgba(75, 192, 192, 0.7)', 'rgba(201, 203, 207, 0.7)']
-                        }]
-                    }
-                });
-            } catch (err) {
-                console.error("Error fetching data or rendering charts:", err);
-                alert("An error occurred while fetching data. Check the console for more details.");
-            }
-        }
-
-        // Fetch and render charts on page load
-        fetchDataAndRenderCharts();
-    </script>
-
-    <!-- Chat Section -->
-    <div class="row mt-4">
-        <div class="col-md-12">
-            <div class="chat">
-                <h3>Ask Me Anything</h3>
-                <p>Type your query to get insights. Example queries:</p>
-                <ul>
-                    <li><strong>What is the sales quantity of product 101?</strong></li>
-                    <li><strong>What is the price of product 202?</strong></li>
-                    <li><strong>What is the stock level of product 303?</strong></li>
-                </ul>
-                <input id="userQuery" class="form-control mb-2" placeholder="e.g., What is the sales quantity of product 101?" />
-                <div class="phi-toggle">
-                    <label>
-                        <input type="checkbox" id="usePhi"> Use Phi AI (Ollama)
-                    </label>
-                </div>
-                <button class="btn btn-primary" onclick="sendChat()">Ask</button>
-                <pre id="chatOutput" class="mt-3"></pre>
-            </div>
-        </div>
+        <div class="overlay"></div>
     </div>
 
-    <script>
-        async function sendChat() {
-            const queryInput = document.getElementById("userQuery").value.trim();
-            const usePhi = document.getElementById("usePhi").checked;
-            const output = document.getElementById("chatOutput");
+    <!-- Link the external JavaScript file -->
+    <script src="/dashboard/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.js"></script>
 
-            if (!queryInput) {
-                output.innerText = "Please enter a query to proceed.";
-                return;
-            }
-
-            output.innerText = "Loading...";
-            try {
-                const response = await fetch("/api/chat", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ 
-                        query: queryInput,
-                        usePhi: usePhi 
-                    })
-                });
-                const data = await response.json();
-                output.innerText = data.response || data.error || "No response available.";
-            } catch (err) {
-                output.innerText = `❌ Error: ${err.message}`;
-            }
-        }
-    </script>
 </body>
 </html>

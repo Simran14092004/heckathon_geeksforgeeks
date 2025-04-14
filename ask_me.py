@@ -1,8 +1,7 @@
-# ask_me.py
-
 from flask import jsonify, request
 import pandas as pd
 import re
+import numpy as np
 
 # Load dataset function
 def load_dataset(file):
@@ -30,32 +29,33 @@ def process_ask_me_query(query):
             product_id = match.group(2)
             return fetch_data_for_term(term, product_id)
 
-    return {"error": f"Could not understand the query: {query}"}
+    return {"error": f"Could not understand the query: '{query}'. Try something like 'What is the sales quantity of product 123?'."}
 
 # Function to fetch the requested data
 def fetch_data_for_term(term, product_id):
-    """
-    Fetch data based on the term and product ID.
-    """
-    if term == "sales_quantity":
+    try:
         df = load_dataset("demand_forecasting.csv")
-        if "Product ID" in df.columns:
-            result = df[df["Product ID"] == int(product_id)]["Sales Quantity"].sum()
-            return {"sales_quantity": result}
-    
-    elif term == "price":
-        df = load_dataset("pricing_optimization.csv")
-        if "Product ID" in df.columns:
-            result = df[df["Product ID"] == int(product_id)]["Price"].values[0]
-            return {"price": result}
-    
-    elif term == "stock":
-        df = load_dataset("inventory_monitoring.csv")
-        if "Product ID" in df.columns:
-            result = df[df["Product ID"] == int(product_id)]["Stock Levels"].sum()
-            return {"stock_level": result}
-    
-    return {"error": "Product ID not found or data is missing."}
+        if term == "sales_quantity" and "Product ID" in df.columns:
+            product_data = df[df["Product ID"] == int(product_id)]
+            if not product_data.empty:
+                # Convert to standard Python int
+                return {"sales_quantity": int(product_data["Sales Quantity"].sum())}
+            else:
+                return {"error": f"No sales data found for product ID {product_id}."}
+
+        # Implement other cases (price and stock)
+        elif term == "price":
+            # Add logic for price
+            return {"error": "Price retrieval not implemented."}
+
+        elif term == "stock":
+            # Add logic for stock levels
+            return {"error": "Stock retrieval not implemented."}
+
+        else:
+            return {"error": f"Unknown term: {term}"}
+    except Exception as e:
+        return {"error": f"An unexpected error occurred: {e}"}
 
 # API endpoint for 'Ask Me' queries
 def ask_me_query_route(app):
@@ -63,7 +63,7 @@ def ask_me_query_route(app):
     def ask_me():
         query = request.args.get('query', "")
         if not query:
-            return jsonify({"error": "Missing 'query' parameter"}), 400
+            return jsonify({"error": "Missing 'query' parameter. For example, try 'What is the price of product 123?'"}), 400
         
         result = process_ask_me_query(query)
         return jsonify(result)

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supplier Recommendations</title>
+    <link rel="stylesheet" href="dashboard\style.css">
+    
+</head>
+<body>
+    <header>
+        <h1>Supplier Recommendations</h1>
+    </header>
+    <main>
+        <!-- Section for Supplier Recommendations -->
+        <section id="supplierSection" class="supplier-recommendations">
+            <h3>Get Supplier Recommendations</h3>
+            <button onclick="fetchAgent('supplier')" class="animate__animated animate__pulse">
+                Get Supplier Recommendations
+            </button>
+            <pre id="supplierOutput">Click "Get Supplier Recommendations" to see suggestions...</pre>
+        </section>
+
+        <!-- Section for Filter Product -->
+        <section id="filterSection" class="filter-product">
+            <h3>Filter Product</h3>
+            <form id="filterForm" onsubmit="applyFilter(event)">
+                <label for="filterInput">Filter by Product ID:</label>
+                <input type="text" id="filterInput" placeholder="Enter Product ID">
+                <button type="submit">Apply Filter</button>
+            </form>
+            <pre id="filterOutput">Filtered product details will appear here...</pre>
+        </section>
+    </main>
+    <script src="/dashboard/script.js" defer></script>
+</body>
+</html>

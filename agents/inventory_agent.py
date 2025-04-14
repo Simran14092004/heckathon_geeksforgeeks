@@ -1,3 +1,5 @@
+#inventory_agent.py
+
 import pandas as pd
 
 def get_inventory_status(df: pd.DataFrame):
